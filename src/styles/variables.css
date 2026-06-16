@@ -1,0 +1,46 @@
+:root {
+  /* Color Palette - Dark Mode Primary */
+  --color-bg-base: oklch(0.18 0.02 260); /* Deep Navy Background */
+  --color-bg-surface: oklch(0.25 0.03 260);
+  --color-bg-elevated: oklch(0.3 0.04 260);
+  --color-bg-glass: rgba(30, 35, 50, 0.6);
+  
+  --color-text-primary: oklch(0.95 0.01 260);
+  --color-text-secondary: oklch(0.75 0.02 260);
+  --color-text-muted: oklch(0.6 0.02 260);
+  
+  --color-primary: oklch(0.65 0.2 260); /* Electric Blue */
+  --color-primary-glow: rgba(64, 150, 255, 0.4);
+  --color-secondary: oklch(0.65 0.2 300); /* Purple/Cyan mix */
+  
+  --color-success: oklch(0.7 0.15 150); /* Green for profit */
+  --color-danger: oklch(0.6 0.2 20);   /* Red for loss */
+  --color-warning: oklch(0.8 0.15 80); /* Yellow for risk */
+  
+  /* Borders */
+  --border-subtle: 1px solid oklch(0.35 0.04 260 / 0.5);
+  --border-glass: 1px solid rgba(255, 255, 255, 0.1);
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  /* Typography */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  /* Shadows & Glows */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-glow: 0 0 20px var(--color-primary-glow);
+  
+  /* Animations */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Scrollbar */
+  --scrollbar-bg: var(--color-bg-base);
+  --scrollbar-thumb: var(--color-bg-elevated);
+
+  color-scheme: dark;
+}

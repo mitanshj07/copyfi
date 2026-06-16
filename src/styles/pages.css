@@ -1,0 +1,223 @@
+/* Dashboard Page */
+.dashboard-stats {
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-label {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
+  position: relative;
+}
+
+/* Explore Page */
+.search-filter-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  background: var(--color-bg-surface);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: var(--border-subtle);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  outline: none;
+}
+
+.filter-select {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+.trader-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.trader-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.trader-name {
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.trader-ens {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.trader-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.mini-stat-value {
+  font-weight: 600;
+}
+
+/* Trader Profile */
+.profile-header {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.profile-details h1 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.profile-bio {
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+
+.profile-actions {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 300px;
+}
+
+/* Vault Page */
+.vault-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.vault-tvl {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+.vault-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Settings */
+.subscription-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.tier-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tier-card.pro {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 30px rgba(64, 150, 255, 0.15);
+}
+
+.tier-card.pro::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: 12px;
+  right: -30px;
+  background: var(--color-primary);
+  color: white;
+  padding: 4px 30px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  transform: rotate(45deg);
+}
+
+.tier-price {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.tier-price span {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.tier-features {
+  list-style: none;
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tier-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tier-features li::before {
+  content: '✓';
+  color: var(--color-success);
+  font-weight: bold;
+}
