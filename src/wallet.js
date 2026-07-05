@@ -110,3 +110,11 @@ export function renderWalletUI() {
     });
   }
 }
+
+export function updateWalletTier(newTier) {
+  if (!walletState.isConnected) return;
+  walletState.tier = newTier;
+  localStorage.setItem('copyfi_wallet', JSON.stringify(walletState));
+  notify();
+}
+

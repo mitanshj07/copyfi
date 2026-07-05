@@ -1,7 +1,9 @@
-import { walletState } from '../wallet.js';
+import { walletState, updateWalletTier } from '../wallet.js';
 import { showToast } from '../components/toast.js';
 
 export function renderSettings(container) {
+  const currentTier = walletState.isConnected ? walletState.tier : 'Free';
+  
   container.innerHTML = `
     <div class="topbar">
       <h1 class="page-title">Settings & Subscription</h1>
@@ -56,7 +58,7 @@ export function renderSettings(container) {
 
     <div class="subscription-cards">
       <!-- Free Tier -->
-      <div class="glass-card tier-card">
+      <div class="glass-card tier-card" style="${currentTier === 'Free' ? 'border-color: var(--color-success); box-shadow: 0 0 30px rgba(20, 184, 166, 0.15);' : ''}">
         <h3>Free</h3>
         <div class="tier-price">$0<span>/mo</span></div>
         <ul class="tier-features">
@@ -65,11 +67,13 @@ export function renderSettings(container) {
           <li>Standard Traders</li>
           <li>Standard UI</li>
         </ul>
-        <button class="btn btn-secondary" style="margin-top: auto;" disabled>Current Plan</button>
+        <button class="btn btn-secondary" style="margin-top: auto;" disabled>
+          ${currentTier === 'Free' ? 'Current Plan' : 'Free Tier'}
+        </button>
       </div>
 
       <!-- Pro Tier -->
-      <div class="glass-card tier-card pro">
+      <div class="glass-card tier-card pro" style="${currentTier === 'Pro' ? 'border-color: var(--color-primary); box-shadow: 0 0 30px rgba(64, 150, 255, 0.15);' : ''}">
         <h3 style="color: var(--color-primary);">Pro</h3>
         <div class="tier-price">$29<span>/mo</span></div>
         <ul class="tier-features">
@@ -78,11 +82,13 @@ export function renderSettings(container) {
           <li>Verified Traders</li>
           <li>Real-time Alerts</li>
         </ul>
-        <button class="btn btn-primary btn-upgrade" style="margin-top: auto;" data-tier="Pro">Upgrade via NFT</button>
+        <button class="btn ${currentTier === 'Pro' ? 'btn-secondary' : 'btn-primary'} btn-upgrade" style="margin-top: auto;" data-tier="Pro" ${currentTier === 'Pro' ? 'disabled' : ''}>
+          ${currentTier === 'Pro' ? 'Current Plan' : 'Upgrade via NFT'}
+        </button>
       </div>
 
       <!-- Elite Tier -->
-      <div class="glass-card tier-card">
+      <div class="glass-card tier-card" style="${currentTier === 'Elite' ? 'border-color: var(--color-primary); box-shadow: 0 0 30px rgba(64, 150, 255, 0.15);' : ''}">
         <h3 style="color: oklch(0.65 0.2 300);">Elite</h3>
         <div class="tier-price">$99<span>/mo</span></div>
         <ul class="tier-features">
@@ -91,7 +97,9 @@ export function renderSettings(container) {
           <li>Exclusive Institutional Traders</li>
           <li>API Access</li>
         </ul>
-        <button class="btn btn-secondary btn-upgrade" style="margin-top: auto;" data-tier="Elite">Upgrade via NFT</button>
+        <button class="btn btn-secondary btn-upgrade" style="margin-top: auto;" data-tier="Elite" ${currentTier === 'Elite' ? 'disabled' : ''}>
+          ${currentTier === 'Elite' ? 'Current Plan' : 'Upgrade via NFT'}
+        </button>
       </div>
     </div>
   `;
@@ -108,8 +116,8 @@ export function renderSettings(container) {
         e.target.disabled = true;
         
         setTimeout(() => {
+          updateWalletTier(tier);
           showToast(`Successfully upgraded to ${tier} tier!`, 'success');
-          e.target.innerHTML = 'Current Plan';
         }, 1500);
       });
     });

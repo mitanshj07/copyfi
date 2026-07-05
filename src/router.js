@@ -5,6 +5,7 @@ import { renderTrader } from './pages/trader.js';
 import { renderVault } from './pages/vault.js';
 import { renderPortfolio } from './pages/portfolio.js';
 import { renderSettings } from './pages/settings.js';
+import { subscribe } from './wallet.js';
 
 const routes = {
   '/': renderDashboard,
@@ -15,6 +16,7 @@ const routes = {
 
 export function initRouter() {
   window.addEventListener('hashchange', handleRoute);
+  subscribe(handleRoute);
   handleRoute(); // initial load
 }
 
