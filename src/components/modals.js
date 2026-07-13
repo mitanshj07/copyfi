@@ -1,5 +1,6 @@
 import { showToast } from './toast.js';
-import { walletState } from '../wallet.js';
+import { walletState, deductWalletBalance } from '../wallet.js';
+import { addPortfolioCopy } from '../data/portfolio.js';
 
 export function showCopyModal(trader) {
   const container = document.getElementById('modal-container');
@@ -25,7 +26,7 @@ export function showCopyModal(trader) {
           <label>Amount to Copy (ETH)</label>
           <div style="display: flex; gap: 8px;">
             <input type="number" id="copy-amount" class="input-field" style="flex: 1;" placeholder="0.0" step="0.1" min="0.1">
-            <button class="btn btn-secondary" onclick="document.getElementById('copy-amount').value='${walletState.balance}'">Max</button>
+            <button id="copy-max-btn" class="btn btn-secondary">Max</button>
           </div>
           <div style="font-size: 0.75rem; color: var(--color-text-muted); text-align: right;">Balance: ${walletState.balance} ETH</div>
         </div>
@@ -67,15 +68,26 @@ export function showCopyModal(trader) {
     container.innerHTML = '';
   });
 
+  document.getElementById('copy-max-btn').addEventListener('click', () => {
+    document.getElementById('copy-amount').value = walletState.balance;
+  });
+
   document.getElementById('confirm-copy-btn').addEventListener('click', () => {
     if (!walletState.isConnected) {
       showToast('Please connect wallet first', 'error');
       return;
     }
     
-    const amount = document.getElementById('copy-amount').value;
-    if (!amount || amount <= 0) {
+    const amountVal = document.getElementById('copy-amount').value;
+    const amount = parseFloat(amountVal);
+    if (isNaN(amount) || amount <= 0) {
       showToast('Enter a valid amount', 'error');
+      return;
+    }
+
+    const balanceNum = parseFloat(walletState.balance);
+    if (amount > balanceNum) {
+      showToast(`Insufficient balance. You have ${balanceNum} ETH, but tried to copy with ${amount} ETH.`, 'error');
       return;
     }
 
@@ -85,10 +97,12 @@ export function showCopyModal(trader) {
 
     // Simulate smart contract interaction (ERC-4337 Session Key signing)
     setTimeout(() => {
+      deductWalletBalance(amount);
+      addPortfolioCopy(trader.id, amount);
+
       dialog.close();
       container.innerHTML = '';
       showToast(`Successfully copied ${trader.name} with ${amount} ETH!`, 'success');
-      // In a real app, we would update global state here and navigate to portfolio
       setTimeout(() => {
         window.location.hash = '#/portfolio';
       }, 1500);

@@ -118,3 +118,14 @@ export function updateWalletTier(newTier) {
   notify();
 }
 
+export function deductWalletBalance(amount) {
+  if (!walletState.isConnected) return false;
+  const balanceNum = parseFloat(walletState.balance);
+  const amountNum = parseFloat(amount);
+  if (isNaN(amountNum) || amountNum <= 0 || amountNum > balanceNum) return false;
+  walletState.balance = (balanceNum - amountNum).toFixed(2);
+  localStorage.setItem('copyfi_wallet', JSON.stringify(walletState));
+  notify();
+  return true;
+}
+

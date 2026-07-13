@@ -41,3 +41,23 @@ export function getPortfolioCopies() {
     trader: getTrader(copy.traderId)
   }));
 }
+
+export function addPortfolioCopy(traderId, amountEth) {
+  const ethPrice = 3400;
+  const depositValueUsd = parseFloat(amountEth) * ethPrice;
+  const vaultId = `v_${Date.now()}`;
+  
+  const newCopy = {
+    vaultId,
+    traderId,
+    depositAmount: `${parseFloat(amountEth).toFixed(2)} ETH`,
+    depositValueUsd,
+    currentValueUsd: depositValueUsd,
+    pnlPercent: 0.0,
+    sharesOwned: parseFloat(amountEth) * 100,
+    performanceFeeAccrued: 0.0
+  };
+  
+  portfolio.activeCopies.push(newCopy);
+  portfolio.totalValue += depositValueUsd;
+}
