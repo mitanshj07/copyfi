@@ -61,3 +61,22 @@ export function addPortfolioCopy(traderId, amountEth) {
   portfolio.activeCopies.push(newCopy);
   portfolio.totalValue += depositValueUsd;
 }
+
+export function withdrawPortfolioCopy(vaultId, sharesToBurn) {
+  const index = portfolio.activeCopies.findIndex(c => c.vaultId === vaultId);
+  if (index === -1) return 0;
+  const copy = portfolio.activeCopies[index];
+  const burn = Math.min(copy.sharesOwned, parseFloat(sharesToBurn) || copy.sharesOwned);
+  const ratio = burn / copy.sharesOwned;
+  const grossUsd = copy.currentValueUsd * ratio;
+  const feeUsd = copy.performanceFeeAccrued * ratio;
+  portfolio.totalValue = Math.max(0, portfolio.totalValue - grossUsd);
+  if (burn >= copy.sharesOwned - 0.001) {
+    portfolio.activeCopies.splice(index, 1);
+  } else {
+    copy.sharesOwned -= burn;
+    copy.currentValueUsd -= grossUsd;
+    copy.performanceFeeAccrued -= feeUsd;
+  }
+  return Math.max(0, grossUsd - feeUsd) / 3400;
+}

@@ -1,5 +1,7 @@
-import { getPortfolioCopies } from '../data/portfolio.js';
+import { getPortfolioCopies, withdrawPortfolioCopy } from '../data/portfolio.js';
 import { createAreaChart } from '../components/charts.js';
+import { walletState, addWalletBalance } from '../wallet.js';
+import { showToast } from '../components/toast.js';
 
 export function renderVault(container, vaultId) {
   const copies = getPortfolioCopies();
@@ -64,11 +66,11 @@ export function renderVault(container, vaultId) {
         <div class="input-group">
           <label>Shares to Burn</label>
           <div style="display: flex; gap: 8px;">
-            <input type="number" class="input-field" style="flex: 1;" placeholder="0.0">
-            <button class="btn btn-secondary">Max</button>
+            <input type="number" id="burn-amount" class="input-field" style="flex: 1;" placeholder="0.0">
+            <button id="burn-max-btn" class="btn btn-secondary">Max</button>
           </div>
         </div>
-        <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; border-color: var(--color-danger); color: var(--color-danger);">
+        <button id="burn-confirm-btn" class="btn btn-secondary" style="width: 100%; margin-top: 16px; border-color: var(--color-danger); color: var(--color-danger);">
           Withdraw Assets
         </button>
         <div style="font-size: 0.75rem; color: var(--color-text-muted); text-align: center; margin-top: 12px;">
@@ -93,5 +95,19 @@ export function renderVault(container, vaultId) {
       const data = [1.0, 1.05, 1.02, 1.10, 1.12, 1.15];
       createAreaChart(ctx, labels, data);
     }
+
+    document.getElementById('burn-max-btn')?.addEventListener('click', () => {
+      document.getElementById('burn-amount').value = copy.sharesOwned.toFixed(2);
+    });
+
+    document.getElementById('burn-confirm-btn')?.addEventListener('click', () => {
+      if (!walletState.isConnected) return showToast('Please connect wallet first', 'error');
+      const val = parseFloat(document.getElementById('burn-amount').value);
+      if (isNaN(val) || val <= 0 || val > copy.sharesOwned) return showToast('Enter valid shares to burn', 'error');
+      if (val >= copy.sharesOwned - 0.001) window.location.hash = '#/portfolio';
+      const eth = withdrawPortfolioCopy(vaultId, val);
+      addWalletBalance(eth);
+      showToast(`Successfully withdrew ${eth.toFixed(2)} ETH!`, 'success');
+    });
   }, 0);
 }

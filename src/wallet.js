@@ -129,3 +129,12 @@ export function deductWalletBalance(amount) {
   return true;
 }
 
+export function addWalletBalance(amount) {
+  const num = parseFloat(amount);
+  if (!walletState.isConnected || isNaN(num) || num <= 0) return false;
+  walletState.balance = (parseFloat(walletState.balance) + num).toFixed(2);
+  localStorage.setItem('copyfi_wallet', JSON.stringify(walletState));
+  notify();
+  return true;
+}
+
