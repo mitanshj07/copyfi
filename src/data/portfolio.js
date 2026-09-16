@@ -80,3 +80,19 @@ export function withdrawPortfolioCopy(vaultId, sharesToBurn) {
   }
   return Math.max(0, grossUsd - feeUsd) / 3400;
 }
+
+export function depositPortfolioCopy(vaultId, amountEth) {
+  const copy = portfolio.activeCopies.find(c => c.vaultId === vaultId);
+  if (!copy) return false;
+  const eth = parseFloat(amountEth);
+  if (isNaN(eth) || eth <= 0) return false;
+  const addedUsd = eth * 3400;
+  const currentEth = parseFloat(copy.depositAmount) || 0;
+  copy.depositAmount = `${(currentEth + eth).toFixed(2)} ETH`;
+  copy.depositValueUsd += addedUsd;
+  copy.currentValueUsd += addedUsd;
+  copy.sharesOwned += eth * 100;
+  copy.pnlPercent = parseFloat(((copy.currentValueUsd - copy.depositValueUsd) / copy.depositValueUsd * 100).toFixed(1));
+  portfolio.totalValue += addedUsd;
+  return true;
+}

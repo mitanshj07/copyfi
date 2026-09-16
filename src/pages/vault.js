@@ -1,6 +1,6 @@
-import { getPortfolioCopies, withdrawPortfolioCopy } from '../data/portfolio.js';
+import { getPortfolioCopies, withdrawPortfolioCopy, depositPortfolioCopy } from '../data/portfolio.js';
 import { createAreaChart } from '../components/charts.js';
-import { walletState, addWalletBalance } from '../wallet.js';
+import { walletState, addWalletBalance, deductWalletBalance } from '../wallet.js';
 import { showToast } from '../components/toast.js';
 
 export function renderVault(container, vaultId) {
@@ -54,11 +54,12 @@ export function renderVault(container, vaultId) {
         <div class="input-group">
           <label>Amount (ETH)</label>
           <div style="display: flex; gap: 8px;">
-            <input type="number" class="input-field" style="flex: 1;" placeholder="0.0">
-            <button class="btn btn-secondary">Max</button>
+            <input type="number" id="deposit-amount" class="input-field" style="flex: 1;" placeholder="0.0" step="0.1" min="0.1">
+            <button id="deposit-max-btn" class="btn btn-secondary">Max</button>
           </div>
+          <div style="font-size: 0.75rem; color: var(--color-text-muted); text-align: right;">Balance: ${walletState.balance} ETH</div>
         </div>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Deposit</button>
+        <button id="deposit-confirm-btn" class="btn btn-primary" style="width: 100%; margin-top: 16px;">Deposit</button>
       </div>
 
       <div class="glass-card">
@@ -95,6 +96,20 @@ export function renderVault(container, vaultId) {
       const data = [1.0, 1.05, 1.02, 1.10, 1.12, 1.15];
       createAreaChart(ctx, labels, data);
     }
+
+    document.getElementById('deposit-max-btn')?.addEventListener('click', () => {
+      document.getElementById('deposit-amount').value = walletState.balance;
+    });
+
+    document.getElementById('deposit-confirm-btn')?.addEventListener('click', () => {
+      if (!walletState.isConnected) return showToast('Please connect wallet first', 'error');
+      const val = parseFloat(document.getElementById('deposit-amount').value);
+      if (isNaN(val) || val <= 0) return showToast('Enter a valid deposit amount', 'error');
+      if (val > parseFloat(walletState.balance)) return showToast(`Insufficient balance (${walletState.balance} ETH)`, 'error');
+      depositPortfolioCopy(vaultId, val);
+      deductWalletBalance(val);
+      showToast(`Successfully deposited ${val.toFixed(2)} ETH!`, 'success');
+    });
 
     document.getElementById('burn-max-btn')?.addEventListener('click', () => {
       document.getElementById('burn-amount').value = copy.sharesOwned.toFixed(2);
